@@ -3,6 +3,8 @@
 **Free, open source music notation that runs entirely in your browser.**
 No account, no login, no backend, no tracking. Your scores stay on your device.
 
+**[Open Clefhanger →](https://hudsoonvid.github.io/Clefhanger/)**
+
 Clefhanger is an MIT-licensed score editor in the spirit of Flat.io, but fast,
 offline-friendly and private by design. Write music with the mouse or the
 keyboard, hear it back, and move it in and out of other notation apps with
@@ -51,7 +53,9 @@ Then open the URL Vite prints (usually http://localhost:5173).
 
 The build is a folder of static files with relative paths, so you can host it
 anywhere: GitHub Pages, Netlify, any web server, or open it from a USB stick
-through a local server.
+through a local server. Every push to `main` is deployed to
+[GitHub Pages](https://hudsoonvid.github.io/Clefhanger/) by
+`.github/workflows/deploy.yml`.
 
 ## Writing music
 
