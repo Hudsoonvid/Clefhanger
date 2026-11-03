@@ -1,0 +1,859 @@
+/* ------------------------------------------------------------------------
+   Theme tokens. Light is the default; dark applies from the OS preference
+   unless the user picked a theme, and always when data-theme="dark".
+   ------------------------------------------------------------------------ */
+:root {
+  --bg: #f1efea;
+  --surface: #fbfaf7;
+  --surface-2: #ece9e2;
+  --paper: #ffffff;
+  --border: #dedad1;
+  --text: #1c1c1f;
+  --muted: #67676e;
+  --accent: #3b5bdb;
+  --accent-soft: rgba(59, 91, 219, 0.12);
+  --on-accent: #ffffff;
+  --ink: #1a1a1d;
+  --staff: #8d8d93;
+  --play: #e8590c;
+  --danger: #c92a2a;
+  --shadow: 0 1px 2px rgba(30, 25, 15, 0.06), 0 8px 30px rgba(30, 25, 15, 0.07);
+  --radius: 10px;
+  --font: Inter, 'Segoe UI', system-ui, -apple-system, Roboto, 'Helvetica Neue', Arial, sans-serif;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --bg: #131417;
+    --surface: #1b1c20;
+    --surface-2: #25272d;
+    --paper: #1e1f24;
+    --border: #2f3138;
+    --text: #ececf0;
+    --muted: #9b9ca6;
+    --accent: #8197ff;
+    --accent-soft: rgba(129, 151, 255, 0.16);
+    --on-accent: #0f1222;
+    --ink: #e9e9ee;
+    --staff: #77787f;
+    --play: #ff922b;
+    --danger: #ff6b6b;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 10px 30px rgba(0, 0, 0, 0.3);
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme='dark'] {
+  --bg: #131417;
+  --surface: #1b1c20;
+  --surface-2: #25272d;
+  --paper: #1e1f24;
+  --border: #2f3138;
+  --text: #ececf0;
+  --muted: #9b9ca6;
+  --accent: #8197ff;
+  --accent-soft: rgba(129, 151, 255, 0.16);
+  --on-accent: #0f1222;
+  --ink: #e9e9ee;
+  --staff: #77787f;
+  --play: #ff922b;
+  --danger: #ff6b6b;
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 10px 30px rgba(0, 0, 0, 0.3);
+  color-scheme: dark;
+}
+
+/* ------------------------------------------------------------------------
+   Base
+   ------------------------------------------------------------------------ */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+/* The app scrolls inside .workspace; the page itself never scrolls. */
+html,
+body {
+  overflow: hidden;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font: 14px/1.45 var(--font);
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+}
+
+button,
+input,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: default;
+  opacity: 0.4;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+kbd {
+  font: 12px/1 ui-monospace, 'SF Mono', Consolas, monospace;
+  padding: 3px 6px;
+  border: 1px solid var(--border);
+  border-bottom-width: 2px;
+  border-radius: 5px;
+  background: var(--surface);
+  color: var(--text);
+  white-space: nowrap;
+}
+
+.app {
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr) auto;
+  /* Without this the toolbar's min-content width would widen the whole page on phones. */
+  grid-template-columns: minmax(0, 1fr);
+  height: 100dvh;
+}
+
+/* ------------------------------------------------------------------------
+   Top bar
+   ------------------------------------------------------------------------ */
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 14px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  min-width: 0;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-width: 0;
+}
+
+.brand-name {
+  font-weight: 650;
+  font-size: 16px;
+  letter-spacing: -0.01em;
+}
+
+.file-name {
+  color: var(--muted);
+  font-size: 13px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 22ch;
+}
+
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+
+.bar-spacer {
+  flex: 1;
+}
+
+.bar-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 34px;
+  min-width: 34px;
+  padding: 0 9px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  justify-content: center;
+}
+
+.bar-button:hover:not(:disabled) {
+  background: var(--surface-2);
+}
+
+.menu {
+  position: relative;
+}
+
+.menu-popover {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  z-index: 30;
+  min-width: 250px;
+  padding: 6px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.menu-item {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 8px 10px;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  text-align: left;
+}
+
+.menu-item:hover,
+.menu-item:focus-visible {
+  background: var(--accent-soft);
+}
+
+.menu-item kbd {
+  border: 0;
+  background: none;
+  color: var(--muted);
+  padding: 0;
+}
+
+.menu-divider {
+  height: 1px;
+  margin: 6px 4px;
+  background: var(--border);
+}
+
+/* ------------------------------------------------------------------------
+   Palette
+   ------------------------------------------------------------------------ */
+.palette {
+  /* Containing block for visually-hidden labels, so they scroll with the toolbar
+     instead of widening the page on phones. */
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 6px;
+  padding: 6px 12px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+
+.tool-group {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding-right: 6px;
+  margin-right: 2px;
+  border-right: 1px solid var(--border);
+  flex: none;
+}
+
+.tool-group:last-child {
+  border-right: 0;
+}
+
+.tool {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 36px;
+  min-width: 36px;
+  padding: 0 7px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: transparent;
+}
+
+.tool:hover {
+  background: var(--surface-2);
+}
+
+.tool.is-active {
+  background: var(--accent-soft);
+  border-color: color-mix(in srgb, var(--accent) 45%, transparent);
+  color: var(--accent);
+}
+
+.mode-toggle.is-active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--on-accent);
+}
+
+.tool-text {
+  font-weight: 550;
+}
+
+/* Bravura glyphs: SMuFL glyphs sit on the baseline at 4 staff spaces per em. */
+.glyph {
+  font-family: Bravura, serif;
+  font-size: 24px;
+  line-height: 1;
+  display: inline-block;
+  height: 24px;
+  width: 18px;
+  text-align: center;
+  font-feature-settings: normal;
+}
+
+.glyph-note {
+  transform: translateY(8px);
+}
+
+.glyph-note.glyph-w {
+  transform: translateY(1px);
+}
+
+.glyph-dot {
+  transform: translateY(1px);
+  font-size: 30px;
+}
+
+.glyph-rest {
+  transform: translateY(1px);
+}
+
+.glyph-acc {
+  transform: translateY(1px);
+}
+
+.select-tool select {
+  height: 34px;
+  padding: 0 8px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--paper);
+  max-width: 190px;
+}
+
+.select-time select {
+  width: 72px;
+}
+
+/* ------------------------------------------------------------------------
+   Workspace and score
+   ------------------------------------------------------------------------ */
+.workspace {
+  overflow: auto;
+  padding: 24px;
+  scroll-padding: 60px;
+}
+
+.paper {
+  max-width: 1200px;
+  margin: 0 auto;
+  background: var(--paper);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  box-shadow: var(--shadow);
+  padding: 26px 24px 10px;
+}
+
+.paper-header {
+  display: grid;
+  gap: 2px;
+  margin-bottom: 4px;
+}
+
+.paper-header input {
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: transparent;
+  padding: 2px 8px;
+  width: 100%;
+}
+
+.paper-header input:hover {
+  border-color: var(--border);
+}
+
+.paper-header input:focus {
+  border-color: var(--accent);
+  outline: none;
+}
+
+.score-title {
+  font: 600 26px/1.25 Georgia, 'Times New Roman', serif;
+  text-align: center;
+  letter-spacing: -0.01em;
+}
+
+.score-composer {
+  text-align: right;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.score-canvas {
+  position: relative;
+  width: 100%;
+  min-height: 200px;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.score-canvas.is-input {
+  cursor: crosshair;
+}
+
+.score-svg svg {
+  display: block;
+  overflow: visible;
+}
+
+.score-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  overflow: visible;
+}
+
+/* Recolour VexFlow's output from theme tokens so dark mode just works. */
+.score-svg svg [fill]:not([fill='none']),
+.score-svg svg text {
+  fill: var(--ink);
+}
+
+.score-svg svg [stroke]:not([stroke='none']) {
+  stroke: var(--ink);
+}
+
+.score-svg svg .vf-stave path {
+  stroke: var(--staff);
+}
+
+.score-svg svg .is-cursor [fill]:not([fill='none']),
+.score-svg svg .is-cursor text,
+.score-svg svg .is-selected [fill]:not([fill='none']),
+.score-svg svg .is-selected text {
+  fill: var(--accent);
+}
+
+.score-svg svg .is-cursor [stroke]:not([stroke='none']),
+.score-svg svg .is-selected [stroke]:not([stroke='none']) {
+  stroke: var(--accent);
+}
+
+.score-svg svg .is-playing [fill]:not([fill='none']),
+.score-svg svg .is-playing text {
+  fill: var(--play);
+}
+
+.score-svg svg .is-playing [stroke]:not([stroke='none']) {
+  stroke: var(--play);
+}
+
+.input-caret {
+  fill: var(--accent-soft);
+  stroke: color-mix(in srgb, var(--accent) 55%, transparent);
+  stroke-width: 1;
+}
+
+.ghost-note ellipse {
+  fill: var(--accent);
+  opacity: 0.55;
+}
+
+.ghost-note ellipse.hollow {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 2;
+}
+
+.ghost-note line {
+  stroke: var(--accent);
+  stroke-width: 1.2;
+  opacity: 0.6;
+}
+
+/* ------------------------------------------------------------------------
+   Playback bar
+   ------------------------------------------------------------------------ */
+.playbar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 8px 14px calc(8px + env(safe-area-inset-bottom));
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  min-width: 0;
+}
+
+.transport {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: none;
+}
+
+.play-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 0;
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+.play-button:hover {
+  filter: brightness(1.08);
+}
+
+.tempo {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: 8px;
+  color: var(--muted);
+}
+
+.tempo-glyph {
+  font-family: Bravura, serif;
+  font-size: 20px;
+  line-height: 1;
+  color: var(--text);
+  transform: translateY(5px);
+}
+
+.tempo-number {
+  width: 58px;
+  height: 32px;
+  padding: 0 6px;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  background: var(--paper);
+}
+
+.tempo-slider {
+  width: 120px;
+  accent-color: var(--accent);
+}
+
+.status {
+  flex: 1;
+  min-width: 0;
+  color: var(--muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.status.is-error {
+  color: var(--danger);
+}
+
+.saved {
+  flex: none;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+/* ------------------------------------------------------------------------
+   Instruments drawer
+   ------------------------------------------------------------------------ */
+/* Clips the off-screen drawer so it never widens the page on phones. */
+.drawer-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.scrim {
+  position: absolute;
+  inset: 0;
+  background: rgba(10, 10, 15, 0.35);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.18s;
+}
+
+.scrim.is-open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.drawer {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: min(420px, 100vw);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 14px 16px;
+  background: var(--surface);
+  border-left: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  transform: translateX(105%);
+  visibility: hidden;
+  transition:
+    transform 0.2s ease,
+    visibility 0s linear 0.2s;
+  overflow-y: auto;
+}
+
+.drawer.is-open {
+  transform: none;
+  visibility: visible;
+  pointer-events: auto;
+  transition: transform 0.2s ease;
+}
+
+.drawer-header,
+.dialog-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.drawer-header h2,
+.dialog-header h2 {
+  margin: 0;
+  font-size: 17px;
+}
+
+.part-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.part-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px;
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--paper);
+}
+
+.part-fields {
+  display: grid;
+  grid-template-columns: 1fr 76px;
+  gap: 6px;
+}
+
+.part-fields input,
+.part-clefs select,
+.add-part select {
+  height: 34px;
+  padding: 0 8px;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  background: var(--surface);
+  min-width: 0;
+}
+
+.part-name {
+  font-weight: 600;
+}
+
+.part-clefs {
+  grid-column: 1;
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.part-actions {
+  grid-row: 1 / span 2;
+  grid-column: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 30px;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+}
+
+.icon-button:hover:not(:disabled) {
+  background: var(--surface-2);
+}
+
+.icon-button.danger:hover:not(:disabled) {
+  color: var(--danger);
+}
+
+.add-part {
+  display: flex;
+  gap: 8px;
+}
+
+.add-part select {
+  flex: 1;
+}
+
+.primary-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 34px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--accent);
+  color: var(--on-accent);
+  font-weight: 600;
+}
+
+.drawer-note {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+/* ------------------------------------------------------------------------
+   Shortcuts dialog
+   ------------------------------------------------------------------------ */
+.dialog {
+  width: min(620px, calc(100vw - 24px));
+  max-height: calc(100dvh - 40px);
+  padding: 18px 20px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: var(--shadow);
+}
+
+.dialog::backdrop {
+  background: rgba(10, 10, 15, 0.45);
+}
+
+.dialog-intro {
+  color: var(--muted);
+  margin: 8px 0 12px;
+}
+
+.shortcuts {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.shortcuts td {
+  padding: 6px 4px;
+  border-top: 1px solid var(--border);
+  vertical-align: top;
+}
+
+.shortcuts td:first-child {
+  width: 44%;
+}
+
+/* ------------------------------------------------------------------------
+   Small screens
+   ------------------------------------------------------------------------ */
+@media (max-width: 760px) {
+  .bar-label,
+  .file-name,
+  .tool-text,
+  .saved {
+    display: none;
+  }
+
+  .topbar {
+    padding: 6px 8px;
+    gap: 6px;
+  }
+
+  /* One scrollable row on phones keeps the score area tall. */
+  .palette {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+    padding: 4px 6px;
+  }
+
+  .palette::-webkit-scrollbar {
+    display: none;
+  }
+
+  .workspace {
+    padding: 8px;
+  }
+
+  .paper {
+    padding: 12px 8px 4px;
+    border-radius: 10px;
+  }
+
+  .score-title {
+    font-size: 20px;
+  }
+
+  .playbar {
+    gap: 8px;
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+
+  .tempo-slider {
+    width: 80px;
+  }
+
+  .status {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .tempo-slider {
+    display: none;
+  }
+
+  .brand-name {
+    display: none;
+  }
+}
